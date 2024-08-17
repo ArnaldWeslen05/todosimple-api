@@ -1,15 +1,20 @@
 package com.arnaldweslen.todosimple.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +35,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-
     private long id;
 
     @Column(name = "username", length = 100, nullable = false, unique = true)
@@ -46,7 +50,11 @@ public class User {
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
 
-    // private List<Task> tasks = new ArrayList<Task>()
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true )
+    @JsonManagedReference
+    private List<Task> tasks = new ArrayList<Task>();
+
+
     //construtor vazio
     public User() {
     }
@@ -59,6 +67,16 @@ public class User {
     }
 
     //Metodos de getteres e setteres
+
+
+    public List<Task> getTasks() {
+        return this.tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
     public long getId() {
         return this.id;
     }

@@ -4,12 +4,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.arnaldweslen.todosimple.models.User;
 import com.arnaldweslen.todosimple.repositories.TaskRepository;
 import com.arnaldweslen.todosimple.repositories.UserRepository;
 
-import jakarta.transaction.Transactional;
+
 
 @Service
 public class UserService {
@@ -27,9 +28,9 @@ public class UserService {
         ));
     }
 
-    @Transactional
+   @Transactional
     public User create(User obj) {
-        // obj.setId(null);
+         obj.setId(0);
         obj = this.userRepository.save(obj);
         this.taskRepository.saveAll(obj.getTasks());
         return obj;
